@@ -3,7 +3,7 @@ bluimp-jquery-file-upload-with-mvc4-and-webapi
 
 This is an implementation of BluImp's jQuery FileUpload widget. This is my first attempt at using Git and was slightly nervous about forking so I've created this repo for the time being until I'm more familiar with Git.
 
-The original BluImp version is here (ttps://github.com/blueimp/jQuery-File-Upload
+The original BluImp version is here https://github.com/blueimp/jQuery-File-Upload
 
 I've additionally made extensive use of Max Pavlovs MVC3 & HttpHandler code within the WebAPI controller that version can be found here https://github.com/maxpavlov/jQuery-File-Upload.MVC3
 
