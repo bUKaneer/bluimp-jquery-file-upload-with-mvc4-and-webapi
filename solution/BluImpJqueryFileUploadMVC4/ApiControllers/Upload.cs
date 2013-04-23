@@ -24,26 +24,26 @@ namespace BluImpJqueryFileUploadMVC4.ApiControllers
         public bool _isReusable { get { return false; } }
 
         #region Get
-        public HttpResponseMessage Get()
+        private HttpResponseMessage DownloadFileContent()
         {
-            if (!string.IsNullOrEmpty(HttpContext.Current.Request["f"]))
+            var filename = HttpContext.Current.Request["f"];
+            var filePath = _storageRoot + filename;
+            if (File.Exists(filePath))
             {
-                var filename = HttpContext.Current.Request["f"];
-                var filePath = _storageRoot + filename;
-                if (File.Exists(filePath))
+                HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
+                response.Content = new StreamContent(new FileStream(filePath, FileMode.Open, FileAccess.Read));
+                response.Content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
+                response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment")
                 {
-                    HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
-                    response.Content = new StreamContent(new FileStream(filePath, FileMode.Open, FileAccess.Read));
-                    response.Content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
-                    response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment")
-                        {
-                            FileName = filename
-                        };
-                    return response;
-                }
-                return ControllerContext.Request.CreateErrorResponse(HttpStatusCode.NotFound, "");
+                    FileName = filename
+                };
+                return response;
             }
+            return ControllerContext.Request.CreateErrorResponse(HttpStatusCode.NotFound, "");
+        }
 
+        private HttpResponseMessage DownloadFileList()
+        {
             var files =
             new DirectoryInfo(_storageRoot)
                 .GetFiles("*", SearchOption.TopDirectoryOnly)
@@ -52,6 +52,16 @@ namespace BluImpJqueryFileUploadMVC4.ApiControllers
                 .ToArray();
             HttpContext.Current.Response.AppendHeader("Content-Disposition", "inline; filename=\"files.json\"");
             return ControllerContext.Request.CreateResponse(HttpStatusCode.OK, _js.Serialize(files));
+        }
+
+
+        public HttpResponseMessage Get()
+        {
+            if (!string.IsNullOrEmpty(HttpContext.Current.Request["f"]))
+            {
+                return DownloadFileContent();
+            }
+            return DownloadFileList();
         }
         #endregion
 
@@ -233,4 +243,7 @@ namespace BluImpJqueryFileUploadMVC4.ApiControllers
         }
     }
     #endregion
+
+
+
 }

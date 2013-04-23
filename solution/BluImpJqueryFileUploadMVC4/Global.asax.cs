@@ -1,5 +1,10 @@
-﻿using System.Net.Http.Formatting;
+﻿using System;
+using System.Net.Http;
+using System.Net.Http.Formatting;
+using System.Web;
 using System.Web.Http;
+using System.Web.Http.Hosting;
+using System.Web.Http.WebHost;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
